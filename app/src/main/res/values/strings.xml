@@ -17,6 +17,8 @@
     <string name="ingrese_el_titulo">Ingrese el titulo..</string>
     <string name="publicar">Publicar</string>
     <string name="ingrese_email">Ingrese email..</string>
+    <string name="Categoria">Categoria</string>
+    <string name="CategoriaSeleccionada">Categoria Seleccionada</string>
 
 
 </resources>

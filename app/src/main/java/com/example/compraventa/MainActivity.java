@@ -1,10 +1,14 @@
 package com.example.compraventa;
 
-import static android.util.Log.*;
-
 import static java.lang.Integer.parseInt;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -17,36 +21,79 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import Model.Categoria;
+
 public class MainActivity extends AppCompatActivity {
-    private Spinner spinner;
+   // private Spinner spinner;
+   private static final int CATEGORIA_SELECCIONADA = 666;
+    
     private Switch switchP;
     private SeekBar seekBarPorcentaje;
     private CheckBox checkBoxretiro;
     private TextView varPorcentaje;
     private CheckBox checkBoxAceptar;
-
+    private Button siguiente;
+    private TextView catSeleccionada;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        spinnerCategoria();
+        //spinnerCategoria();
+        Siguiente();
         switchPorcentaje();
         mostrarDireccionRetiro();
         bottonPublicar();
+
+
     }
 
 
-    public void spinnerCategoria(){
-        String[] opciones = {"SELECCIONE CATEGORIA","INDUMENTARIA", "ELECTRONICA", "ENTRETENIMIENTO", "JARDIN", "VEHICULOS", "JUGUETES"};
-        spinner = (Spinner) findViewById(R.id.spinnerCategoria);
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter (this,
-                android.R.layout.simple_spinner_item,
-                opciones) ;
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+    public void Siguiente() {
+        siguiente = (Button) findViewById(R.id.buttonSeleccionarCategoria);
+
+        siguiente.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+
+                Intent miIntent = new Intent(MainActivity.this, MainActivity2.class);
+              //  startActivity(miIntent);
+                startActivityForResult(miIntent ,CATEGORIA_SELECCIONADA);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        catSeleccionada=findViewById(R.id.textCategoria);
+        if(requestCode==CATEGORIA_SELECCIONADA){
+            if(resultCode== Activity.RESULT_OK){
+                String res = data.getStringExtra("Resultado");
+                if(res !=null)
+
+                {
+                   // Toast.makeText(MainActivity.this,"Resultado = "+res,Toast.LENGTH_LONG).show();
+                    catSeleccionada.setText(res);
+                }
+                else{catSeleccionada.setText("Categoria Seleccionada");}
+
+            }
+        }
 
     }
+
+
+
+   // public void spinnerCategoria(){
+     //   String[] opciones = {"SELECCIONE CATEGORIA","INDUMENTARIA", "ELECTRONICA", "ENTRETENIMIENTO", "JARDIN", "VEHICULOS", "JUGUETES"};
+       // spinner = (Spinner) findViewById(R.id.spinnerCategoria);
+  //      ArrayAdapter<CharSequence> adapter = new ArrayAdapter (this,
+   //             android.R.layout.simple_spinner_item,
+     //           opciones) ;
+      //  adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+      //  spinner.setAdapter(adapter);
+
+    //}
 
     public  void switchPorcentaje() {
 
@@ -143,16 +190,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public String seleccionarCategoria() {
+ //   public String seleccionarCategoria() {
 
-        Spinner categoria = (Spinner) findViewById(R.id.spinnerCategoria);
+  //      Spinner categoria = (Spinner) findViewById(R.id.spinnerCategoria);
 
-        final String[] selec = new String[1];
-        selec[0] =categoria.getSelectedItem().toString();
+    //    final String[] selec = new String[1];
+      //  selec[0] =categoria.getSelectedItem().toString();
 
-        return selec[0];
+        //return selec[0];
 
-    }
+    //}
 
 
     public void bottonPublicar() {
@@ -178,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                categoria[0] =seleccionarCategoria();
+                //categoria[0] =seleccionarCategoria();
                 boolean[] permisoPublicar = {true};
 
                 if(validaciones.Vacio(titulo)){
@@ -224,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 }
-                if(categoria[0].equals("SELECCIONE CATEGORIA")){
+                if(catSeleccionada.equals("Categoria Seleccionada")){
                     permisoPublicar[0] =false;
                     Toast.makeText(getApplicationContext(), "Debe seleccionar una categoria", Toast.LENGTH_LONG).show();
 
